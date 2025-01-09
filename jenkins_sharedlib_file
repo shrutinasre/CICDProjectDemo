@@ -1,0 +1,50 @@
+@Library("sharedlib") _
+pipeline{
+    
+    agent {label "worker1"}
+    
+    stages{
+        
+        stage("Start"){
+            steps{
+                script{
+                hello()
+                }
+            }
+            
+        }
+        stage("code clone"){
+            steps{
+                script{
+                    clone("https://github.com/shrutinasre/CICDProjectDemo.git", "master")
+                }
+            }
+        }
+        stage("Build"){
+            steps{
+                script{
+                    docker_build("cicddemo-app", "latest", "shrutidocker2024")
+                }
+            }
+        }
+        stage("Test"){
+            steps{
+                echo "This is testing stage"
+            }
+        }
+        stage("Push to DockerHub"){
+            steps{
+                script{
+                    docker_push("cicddemo-app", "latest", "shrutidocker2024" )
+                }
+            }
+        }
+        stage("Deploy"){
+            steps{
+                echo "Happy Deploying on ec2 instance"
+                sh "docker-compose down && docker-compose up -d"
+                
+            }
+        }
+    }
+}
