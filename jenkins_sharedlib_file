@@ -29,7 +29,7 @@ pipeline{
         }
         stage("Test"){
             steps{
-                echo "This is testing stage"
+                echo "This is testing stage."
             }
         }
         stage("Push to DockerHub"){
